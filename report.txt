@@ -1,0 +1,7 @@
+Os type : posix 
+Name of the computer: posix
+Os architecture : ('64bit', 'ELF')
+Plateform processor :  x86_64
+Machine type: x86_64
+Platform information: Linux-5.13.0-40-generic-x86_64-with-glibc2.29
+Current User : pa
