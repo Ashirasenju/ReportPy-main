@@ -30,5 +30,19 @@ report.write(f"minfreq: {cpufreq.min:.2f}Mhz \n")
 ram_in_o = str(psutil.virtual_memory()[0])
 
 ram_in_MB = ram_in_o[0:2]
-report.write("ramtot: {}GB".format(ram_in_MB))
+report.write("ramtot: {}GB \n".format(ram_in_MB))
 
+report.write("NETWORK \n \n")
+
+addrs = psutil.net_if_addrs()
+
+for inter_name, inter_adres in addrs.items():
+    for addrs in inter_adres:
+        if str(addrs.family) == "AddressFamily.AF_INET":
+            report.write("IP Address: {} \n".format(addrs.address))
+            report.write("Netmask: {} \n".format(addrs.netmask))
+            report.write("Broadcast IP: {} \n".format(addrs.broadcast))
+        elif str(addrs.family) == "AddressFamily.AF_PACKET":
+            report.write("MAC Adress: {} \n".format(addrs.address))
+            report.write("  Netmask: {} \n".format(addrs.netmask))
+            report.write("  Broadcast MAC: {} \n".format(addrs.broadcast))
