@@ -6,7 +6,7 @@ import os
 import socket
 
 # get the basic information of the software
-report = open("report.txt", "a+")
+report = open("report.txt", "w+")
 
 id = open("id.txt", "a+")
 if os.stat("id.txt").st_size == 0:
@@ -82,8 +82,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((HOST, PORT))
     id_file = open("id.txt")
     id = id_file.read()
-    s.send(id.encode())
-    req = cur = f"INSERT INTO users (ID, MACHINE_NAME, IP, MAC_ADDR, PLAFORM, SYS, VER_SYS, BITS_SYS, TOTCORE, MAXFREQ, MINFREQ, RAMTOT, BROADCAST_IP, NETMASK, BROADCAST_MAC) values ('{id}', '{computer_name}', '{ip_addr}', '{mac_addr}', '{platform}', '{system}', '{ver}', '{bits}', '{totcore}', '{maxfreq}', '{minfreq}', {ram_in_MB}, '{broadcast_ip}', '{netmask}', '{BROADCAST_MAC}');".encode()
+    req = cur = f"INSERT INTO users (ID, MACHINE_NAME, IP, MAC_ADDR, PLATFORM, SYS, VER_SYS, BITS_SYS, TOTCORE, MAXFREQ, MINFREQ, RAMTOT, BROADCOAST_IP, NETMASK, BROADCAST_MAC) values ('{id}', '{computer_name}', '{ip_addr}', '{mac_addr}', '{platform}', '{system}', '{ver}', '{bits}', '{totcore}', '{maxfreq}', '{minfreq}', {ram_in_MB}, '{broadcast_ip}', '{netmask}', '{BROADCAST_MAC}');".encode()
     print(req)
     s.send(req)
 
