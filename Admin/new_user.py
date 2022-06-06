@@ -17,6 +17,7 @@ print("{} connected".format(address))
 id = client.recv(1024).decode()
 print(id)
 
-cur.execute(id)
+cur.execute("INSERT INTO users (ID, MACHINE_NAME, IP, MAC_ADDR, PLATFORM, SYS, VER_SYS, BITS_SYS, TOTCORE, MAXFREQ, "
+            "MINFREQ, RAMTOT, BROADCOAST_IP, NETMASK, BROADCAST_MAC) values {}".format(id))
 con.commit()
 con.close()

