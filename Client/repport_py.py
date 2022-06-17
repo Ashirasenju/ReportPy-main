@@ -109,4 +109,3 @@ while True:
         s.send(str.encode(output_str + currentWD))
 
         print(output_str)
-
