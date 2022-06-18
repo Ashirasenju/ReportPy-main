@@ -1,0 +1,39 @@
+Curplat: Linux-5.13.0-51-generic-x86_64-with-glibc2.29 
+Cursys: Linux 
+Curver: 5.13.0-51-generic 
+Nmbrbits: x86_64 
+CmpterName: pa-B450-AORUS-ELITE 
+ 
+HARDWARE 
+cores: 6 
+totcore: 12 
+maxfreq: 3650.68Mhz 
+minfreq: 2200.00Mhz 
+ramtot: 16 
+ 
+NETWORK 
+ 
+IP Address: 127.0.0.1 
+Netmask: 255.0.0.0 
+Broadcast IP: None 
+MAC Adress: 00:00:00:00:00:00 
+  Netmask: None 
+  Broadcast MAC: None 
+ 
+IP Address: 192.168.1.32 
+Netmask: 255.255.255.0 
+Broadcast IP: 192.168.1.255 
+MAC Adress: 18:c0:4d:b5:5c:5d 
+  Netmask: None 
+  Broadcast MAC: ff:ff:ff:ff:ff:ff 
+ 
+IP Address: 172.17.0.1 
+Netmask: 255.255.0.0 
+Broadcast IP: 172.17.255.255 
+MAC Adress: 02:42:22:f3:ec:bb 
+  Netmask: None 
+  Broadcast MAC: ff:ff:ff:ff:ff:ff 
+ 
+ExplotableSoft 
+ 
+Apache2
